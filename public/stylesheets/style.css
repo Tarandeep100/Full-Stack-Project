@@ -47,7 +47,7 @@ button {
   color: #fff;
 }
 
-#messages {
+/* #messages {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -59,4 +59,39 @@ button {
 
 #messages>li:nth-child(odd) {
   background: #efefef;
+} */
+
+.time {
+  color: red;
+  font-family: "Ubuntu";
+  text-align: right;
+}
+
+.message {
+  display: inline;
+}
+#messages {
+    list-style-type: none;
+}
+.me {
+  font-family: sans-serif, "Courier New", Courier, monospace;
+  text-align: right;
+}
+.you {
+  font-family: sans-serif, "Courier New", Courier, monospace;
+  text-align: left;
+ 
+}
+.yourDiv {
+  position: relative;
+  right: 10;
+  width: 50%;
+  background-color: blue;
+  color: white;
+}
+.myDiv {
+  position: relative;
+  left: 40%;
+  width: 50%;
+  background-color: violet;
 }

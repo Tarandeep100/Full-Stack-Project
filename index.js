@@ -19,7 +19,7 @@ const io = new Server(server);
 
 
 //user setup
-const {joinUser, removeUser} = require('./routes/user')
+const { joinUser, removeUser } = require('./routes/user')
 
 // view engine setup
 
@@ -67,13 +67,27 @@ app.get('/', function (req, res, next) {
 //   res.status(err.status || 500);
 //   res.render('error');
 // });
+
+let thisRoom = "";
 io.on('connection', (socket) => {
     console.log('a user connected');
+    console.log(socket.id);
+
+    socket.on('join room', (data) => {
+        console.log("in room");
+        let newUser = joinUser(socket.id, data.username, data.roomName);
+        socket.emit('send data', {id: newUser.socketID, username: newUser.username, roomname: newUser.roomname });
+        thisRoom = newUser.roomname;
+        console.log("New user->", newUser);
+        socket.join(newUser.roomname);
+    });
     socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
+        io.to(thisRoom).emit("chat message", {data:msg, id:socket.id});
     });
 
     socket.on('disconnect', () => {
+        const user = removeUser(socket.id);
+        console.log("disconnected user->",user);
         console.log('user disconnected');
     });
 });
