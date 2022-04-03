@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Socket.IO chat</title>
+  <link rel="stylesheet" href="./stylesheets/style.css" type="text/css" />
+</head>
+
+<body>
+  <div id="change_username">
+    <input id="username" type="text" />
+    <button id="send_username" type="button">Change username</button>
+  </div>
+  <div>
+    <ul id="messages"></ul>
+  </div>
+  <div>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let username = prompt("whats your name");
+    let room = prompt("room name");
+    let ID = "";
+    var socket = io();
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+
+</html>
