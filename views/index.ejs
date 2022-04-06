@@ -7,6 +7,12 @@
 </head>
 
 <body>
+  <div style="text-align: center;">
+    <p id="room"></p>
+  </div>
+  <div>
+    <p id="event"></p>
+  </div>
   <div>
     <ul id="messages"></ul>
   </div>
@@ -20,37 +26,58 @@
 </body>
 
 <script>
+  var socket = io();
   let userName = prompt("whats your name");
   let room = prompt("room name");
+  // let currentTime = 
+  let chat = "";
+  // let userName = "taran";
+  // let room = "room1";
   let ID = "";
-  var socket = io();
   var form = document.getElementById('form');
   var input = document.getElementById('input');
 
+
+  document.getElementById("room").innerHTML = 'Welcome to ' + room + ' chatroom';
+  // console.log("currentTime->", currentTime);
   socket.emit("join room", { username: userName, roomName: room });
+  socket.on("joining room", (data) => {
+    document.getElementById("event").innerHTML = data.username + ' has joined the chat!';
+  })
+  
 
   socket.on('send data', (data) => {
     ID = data.id;
     console.log("my id:", ID);
   });
+
   //when form is submitted, capture the input value and then send it to server
-  
-  form.focus();
+  input.focus();
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (input.value) {
       socket.emit('chat message', {
         value: input.value,
         user: userName,
+        time: new Date().toISOString(),
       });
       input.value = '';
     }
   });
+
   socket.on("chat message", (data) => {
     // console.log(data.user + ": " + data.id);
     console.log("chat message data->", data);
     displayMessage(data);
   });
+
+  socket.on("disconnected", (data) => {
+    console.log("disconnected user ->", data.user);
+    console.log("disconnected user ->", userName);
+    document.getElementById("event").innerHTML = data.user + ' has left the chat!';
+
+  })
+
   function displayMessage(data) {
     let authorClass = "";
     let divClass = ""
@@ -70,14 +97,10 @@
     p.className = "time";
     p.innerText = moment().format("hh:mm");
     div.innerHTML =
-      '<p class="' +
-      authorClass +
-      '">' +
-      data.data.user +
-      "</p>" +
-      '<p class="message"> ' +
-      data.data.value +
-      "</p>";
+      '<p class="' + authorClass + '">'
+      + data.data.user + '</p>'
+      + '<p class="message"> '
+      + data.data.value + '</p>';
     div.appendChild(p);
     li.appendChild(div);
 
@@ -85,10 +108,6 @@
     //scroll to the bottom
     window.scrollTo(0, document.body.scrollHeight);
   }
-
-
-
-
 </script>
 
 </html>

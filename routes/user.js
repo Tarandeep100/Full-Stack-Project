@@ -1,11 +1,11 @@
 let users = [];
-function joinUser(socketId, userName, roomName) {
+function joinUser(socketId, userName, roomName, time) {
     const user = {
         socketID: socketId,
         username: userName,
-        roomname: roomName
+        roomname: roomName,
     }
-    users.push(user)
+    users.push(user);
     return user;
 }
 function removeUser(id) {
@@ -15,4 +15,7 @@ function removeUser(id) {
         return users.splice(index, 1)[0];
     }
 }
-module.exports = { joinUser, removeUser }
+module.exports = {
+    joinUser,
+    removeUser,
+}

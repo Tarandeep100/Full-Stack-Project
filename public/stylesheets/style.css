@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding-bottom: 3rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #F1DDBF;
 }
 
 #form {
@@ -62,7 +63,7 @@ button {
 } */
 
 .time {
-  color: red;
+  color: #525E75;
   font-family: "Ubuntu";
   text-align: right;
 }
@@ -86,12 +87,13 @@ button {
   position: relative;
   right: 10;
   width: 50%;
-  background-color: blue;
-  color: white;
+  background-color: #78938A;
+  color: #525E75;
 }
 .myDiv {
   position: relative;
   left: 40%;
   width: 50%;
-  background-color: violet;
+  background-color: #92BA92;
+  color: #525E75;
 }
