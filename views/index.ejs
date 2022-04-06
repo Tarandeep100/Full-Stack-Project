@@ -27,8 +27,9 @@
 
 <script>
   var socket = io();
-  let userName = prompt("whats your name");
-  let room = prompt("room name");
+  let userName, room;
+  // let userName = prompt("whats your name");
+  // let room = prompt("room name");
   // let currentTime = 
   let chat = "";
   // let userName = "taran";
@@ -37,19 +38,24 @@
   var form = document.getElementById('form');
   var input = document.getElementById('input');
 
-
-  document.getElementById("room").innerHTML = 'Welcome to ' + room + ' chatroom';
+  socket.on('send data', (data) => {
+    ID = data.id;
+    userName = data.username;
+    room = data.roomname;
+    console.log("my id:", ID);
+    console.log(data);
+    document.getElementById("room").innerHTML = 'Welcome to ' + room + ' chatroom';
+  });
+  
   // console.log("currentTime->", currentTime);
-  socket.emit("join room", { username: userName, roomName: room });
+  // socket.emit("join room", { username: userName, roomName: room });
+  socket.emit("join room");
   socket.on("joining room", (data) => {
     document.getElementById("event").innerHTML = data.username + ' has joined the chat!';
   })
   
 
-  socket.on('send data', (data) => {
-    ID = data.id;
-    console.log("my id:", ID);
-  });
+  
 
   //when form is submitted, capture the input value and then send it to server
   input.focus();

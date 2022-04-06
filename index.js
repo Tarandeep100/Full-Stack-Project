@@ -2,8 +2,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const mongoose = require("mongoose");
-
+const bodyParser = require('body-parser');
 var app = express();
+
 
 //Socket io setup
 const http = require('http');
@@ -14,6 +15,7 @@ const io = new Server(server);
 //user table setup
 const { joinUser, removeUser } = require('./routes/user')
 const userSchema = require("./models/user");
+let newUser;
 
 //event table setup
 const eventSchema = require("./models/event");
@@ -29,6 +31,7 @@ mongoose.connect(connectionString, { useNewUrlParser: true })
     .then(() => { console.log("Mongoose connected sucessfully") },
         error => { console.log("error" + error) });
 
+//schema setup
 const user = mongoose.model('user', userSchema);
 const event = mongoose.model('event', eventSchema);
 const chat = mongoose.model('chat', chatSchema)
@@ -38,17 +41,28 @@ app.set("view engine", "ejs");
 
 //middlewares
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.get('/', function (req, res, next) {
+app.get('/home', function (req, res, next) {
+    console.log("request->",req.query);
+    newUser = {
+        username : req.query.username,
+        room: req.query.roomname,
+    }
     res.render("index");
 });
 
+app.get('/', function (req, res, next) {
+    res.render("login");
+});
 let thisRoom = "";
 io.on('connection', async (socket) => {
+    console.log(newUser);
+    socket.emit('send data', { id: socket.id, username: newUser.username, roomname: newUser.room });
     const eventName = 'connection'
     const eventDesc = 'a user connected';
-    console.log(eventDesc);
-    console.log(socket.id);
+    // console.log(eventDesc);
+    // console.log(socket.id);
     var eventData = {
         socketId: socket.id,
         eventName: eventName,
@@ -59,24 +73,23 @@ io.on('connection', async (socket) => {
     const addEventData = await event.create(eventData);
     console.log("event result->", addEventData);
 
-    socket.on('join room', async (data) => {
+    socket.on('join room', async () => {
         console.log("in room");
 
-        let newUser = joinUser(socket.id, data.username, data.roomName);
-        console.log("New user->", newUser);
+        let newUsers = joinUser(socket.id, newUser.username, newUser.room);
+        console.log("New users->", newUser);
         // console.log(await user.find({}));
         var userData = {
             socketId: socket.id,
-            username: data.username,
-            roomname: data.roomName,
+            username: newUser.username,
+            roomname: newUser.room,
         }
         const addUserData = await user.create(userData);
         console.log('user result', addUserData);
 
-        socket.emit('send data', { id: newUser.socketID, username: newUser.username, roomname: newUser.roomname });
-        thisRoom = newUser.roomname;
-        socket.join(newUser.roomname);
-        io.to(thisRoom).emit("joining room",{username: data.username});
+        thisRoom = userData.roomname;
+        socket.join(userData.roomname);
+        io.to(thisRoom).emit("joining room",{username: userData.username});
     });
     socket.on('chat message', async (data) => {
         var chatData = {

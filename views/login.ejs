@@ -1,0 +1,59 @@
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./stylesheets/loginstyle.css" type="text/css" />
+    <title>Web Chat App login page</title>
+  </head>
+  <body>
+    <div class="join-container">
+	
+	<div class="join-container">
+      <header class="join-header">
+        <h1><i class="chatappheader"></i> Chat Application </h1>
+      </header>
+
+      <main class="join-main">
+        <form action="home">
+          <div class="form-control">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Enter username..."
+              pattern="[A-Za-z0-9]{4,}"
+              title="alphanumeric without space, min length 4"
+              required
+            />
+          </div>
+          <div class="form-control">
+            <label for="room">Room Name</label>
+            <input
+              type="text"
+              name="roomname"
+              id="roomname"
+              placeholder="Enter RoomName..."
+              pattern="[A-Za-z0-9]{4,}"
+              title="alphanumeric without space, min length 4"
+              required
+            />
+          </div>
+          <div class="flex">
+            <button type="submit" class="btn">Login</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>
+</html>
