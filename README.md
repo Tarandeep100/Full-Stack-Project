@@ -4,6 +4,7 @@ BCDV1008 - Full Stack Chat Application
 
 - Users can connect to a room and chat with the users present in the same room.
 - Users can leave the room and then join different room.
+- There are 3 table used to store the user, event and chat information in the mongodb server.
 
 ## Run Locally
 
