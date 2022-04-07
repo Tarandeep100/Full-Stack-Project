@@ -50,7 +50,7 @@ a {
 }
 
 .chat-header {
-	background: var(--dark-color-a);
+	background: black;
 	color: #fff;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
@@ -178,14 +178,14 @@ i.fas.fa-paper-plane{
 .join-header {
 	text-align: center;
 	padding: 20px;
-	background: var(--dark-color-a);
+	background: #37434c;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 }
 
 .join-main {
 	padding: 30px 40px;
-	background: var(--dark-color-b);
+	background: #62707a;
     border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 }

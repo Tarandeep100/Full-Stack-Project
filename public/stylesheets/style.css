@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding-bottom: 3rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #F1DDBF;
+  background-color: #e0e3f4;
 }
 
 #form {
@@ -63,7 +63,7 @@ button {
 } */
 
 .time {
-  color: #525E75;
+  color: black;
   font-family: "Ubuntu";
   text-align: right;
 }
@@ -87,13 +87,34 @@ button {
   position: relative;
   right: 10;
   width: 50%;
-  background-color: #78938A;
-  color: #525E75;
+  background-color: #8395a3;
+  color: black;
 }
 .myDiv {
   position: relative;
   left: 40%;
   width: 50%;
-  background-color: #92BA92;
-  color: #525E75;
+  background-color: #a4bbcc;
+  color: black;
+}
+
+.chat-header {
+	background: #37434c;
+	color: #fff;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.btn {
+	cursor: pointer;
+	padding: 5px 15px;
+	background: var(--light-color);
+	color: var(--dark-color-a);
+	border: 0;
+	font-size: 17px;
+    border-radius: 4px;
 }

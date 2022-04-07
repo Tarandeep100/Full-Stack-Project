@@ -15,7 +15,13 @@ function removeUser(id) {
         return users.splice(index, 1)[0];
     }
 }
+function getCurrentUser(id) {
+    // console.log("users");
+    // console.log(users);
+    return users.find(user => user.socketID == id);
+}
 module.exports = {
     joinUser,
     removeUser,
+    getCurrentUser,
 }
