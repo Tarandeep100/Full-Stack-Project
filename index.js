@@ -4,7 +4,17 @@ var cookieParser = require('cookie-parser');
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 var app = express();
+const cors = require('cors');
 
+var corsOptions = {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  }
+
+app.use(cors(corsOptions));
+// app.use(cors());
 
 //Socket io setup
 const http = require('http');
@@ -41,6 +51,7 @@ app.set("view engine", "ejs");
 //middlewares
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json())
 
 app.get('/home', function (req, res, next) {
     // console.log("request->",req.query);
@@ -54,6 +65,82 @@ app.get('/home', function (req, res, next) {
 app.get('/', function (req, res, next) {
     res.render("login");
 });
+
+app.get('/getEventData',(req,res) => {
+    event.find({})
+    .then(data => {        
+        console.log("EventTable data");
+        res.send(data);
+    })
+    .catch(err => {
+        throw err;
+    })
+});
+
+app.get('/getUserData',(req,res) => {
+    user.find({})
+    .then(data => {        
+        console.log("UserTable data");
+        res.send(data);
+    })
+    .catch(err => {
+        throw err;
+    })
+});
+
+app.get('/getChatData',(req,res) => {
+    chat.find({})
+    .then(data => {        
+        console.log("ChatTable data");
+        res.send(data);
+    })
+    .catch(err => {
+        throw err;
+    })
+});
+
+app.post('/deleteChatData',  (req,res)=>{
+    console.log(req.body.rows);
+    chat.deleteMany({_id:{$in:req.body.rows}})
+    .then(data => {
+        console.log(data);
+        console.log("success")
+        res.send(data)
+    })
+    .catch(err=>{
+        console.log("Error");
+        throw err;
+    })
+  });
+
+  app.post('/deleteUserData',  (req,res)=>{
+    console.log(req.body.rows);
+    user.deleteMany({_id:{$in:req.body.rows}})
+    .then(data => {
+        console.log(data);
+        console.log("success")
+        res.send(data)
+    })
+    .catch(err=>{
+        console.log("Error");
+        throw err;
+    })
+  });
+
+  app.post('/deleteEventData',  (req,res)=>{
+    console.log(req.body.rows);
+    event.deleteMany({_id:{$in:req.body.rows}})
+    .then(data => {
+        console.log(data);
+        console.log("success")
+        res.send(data)
+    })
+    .catch(err=>{
+        console.log("Error");
+        throw err;
+    })
+  });
+
 let thisRoom = "";
 io.on('connection', async (socket) => {
     // console.log(newUser);
@@ -61,7 +148,7 @@ io.on('connection', async (socket) => {
     const eventName = 'connection'
     const eventDesc = 'a user connected';
     // console.log(eventDesc);
-    // console.log(socket.id);
+    console.log("connect", socket.id);
     var eventData = {
         socketId: socket.id,
         eventName: eventName,
@@ -70,7 +157,7 @@ io.on('connection', async (socket) => {
     }
 
     const addEventData = await event.create(eventData);
-    // console.log("event result->", addEventData);
+    console.log("event result->", addEventData);
 
     socket.on('join room', async () => {
         // console.log("in room");
@@ -105,15 +192,26 @@ io.on('connection', async (socket) => {
         io.to(thisRoom).emit("chat message", { data: data, id: socket.id });
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async() => {
         const user = removeUser(socket.id);
+        console.log("disconnect", socket.id);
+        const eventName = 'disconnection'
+        const eventDesc = 'a user disconnected';
+        var eventData = {
+            socketId: socket.id,
+            eventName: eventName,
+            eventDesc: eventDesc,
+            timestamp: new Date().toISOString(),
+        }
+
+        const addEventData = await event.create(eventData);
         io.to(thisRoom).emit("disconnected", { user: user.username, id: socket.id });
         // console.log("disconnected user->", user);
         // console.log('user disconnected');
     });
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(8080, () => {
+    console.log('listening on *:8080');
 });
 module.exports = app;
